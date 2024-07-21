@@ -1,14 +1,15 @@
-Written by
-Carl Crous, Parker Roth, and Victoria Hurd
-
-### Introduction
-Site Reliability Engineers (SRE) traditionally support products indirectly via their services, being accountable to service level objectives (SLO), and improving the reliability of these services. However, this approach has the following limitations that can impact products and the end user experience:
+#### limitations if only support products
 
 Services are partial solutions for user needs and business goals. Measuring the reliability of a service is only an approximation of the user need or business goal.
+
 User interfaces (UI) are increasingly complex. There are a number of layers between UIs and the services that SREs measure, resulting in a significant gap in the coverage of the product.
+
 Service growth can easily outpace the engineering growth of an organization, leading to inevitable neglect of services or team overload.
+
 Service support optimizes a small part of the product's overall reliability and performance, while significant risks exist beyond the scope of these services.
+
 Services are synchronous by nature. Asynchronous flows are often overlooked or difficult to prioritize because their success cannot be measured by a single service.
+
 This article explores these limitations and discusses how some Google SRE teams are addressing these constraints by refocusing support on the product and end user needs, instead of concentrating on infrastructure and services. We also discuss SLO strategies, we describe how Google SREs define a product, and we explain how to decide what's critical to achieving product reliability.
 
 ### Product Engagement
@@ -48,8 +49,8 @@ Product Reliability bootstrapping workflow
 
 Fig. 1: Product Reliability bootstrapping workflow
 
-Get Started
-In this section, you'll learn how to implement a product-focused reliability engagement, including the following key steps:
+
+### how to implement a product-focused reliability engagement, including the following steps:
 
 #### Engage your stakeholders
 #### Model the product
@@ -58,7 +59,7 @@ In this section, you'll learn how to implement a product-focused reliability eng
 
 Each step lists intermediate deliverables that bring value to the SRE team and the opportunities they unlock. We encourage you to proceed in order, but we also highlight areas where you can leverage existing metrics and relationships.
 
-1. Engage your Stakeholders
+### 1. Engage your Stakeholders
 As with any SRE engagement, the first step is to identify the relevant stakeholders. Where service-based engagements rely on a partnership between SRE and a developer team, product-focused engagements require a more diverse set of partners. This broader set typically includes the following:
 
 Product managers: Define product strategy and requirements.
@@ -67,11 +68,11 @@ Engineering teams: Develop the necessary features and infrastructure to implemen
 Support specialists: Interface with the end user via direct or written communication.
 To build the foundation you need to successfully manage product reliability, it's critical to identify the stakeholders responsible for each role.
 
-Deliverable: Documented roles and responsibilities, for example, a RACI matrix [7].
+#### Deliverable: Documented roles and responsibilities, for example, a RACI matrix [7].
 
 After you identify all the relevant stakeholders, meet with each stakeholder to initiate SRE's partnership with them.
 
-2. Model the Product
+### 2. Model the Product
 People use a product to achieve a real-world objective. You need to understand what the product's users are trying to accomplish.
 
 This section introduces two key concepts that will be important to keep in mind throughout the rest of this article: **user objectives and steps**. A user objective describes a user's intent and the goal that they want to achieve. For example, an objective for a mail service might be "Communicate with people." Steps are the individual actions a user takes to reach their objective.
@@ -93,7 +94,7 @@ The objectives are just an organizational element that groups steps together.
 
 Based on the steps, you can identify which parts of the product's interface and infrastructure are required to complete those steps. Some parts of a single interface or infrastructure service might address different objectives, and can therefore have different levels of importance.
 
-Deliverable: A product registry of the user objectives and steps with high-level descriptions.
+#### Deliverable: A product registry of the user objectives and steps with high-level descriptions.
 
 Mail service product definition example
 
@@ -109,7 +110,6 @@ Read mail	Login	The user authenticates themselves on the login page.
 Open inbox	The user opens their inbox page, which lists all their email messages..
 Open message	The user selects an email message, and its contents are presented.
 Receive mail (async)	When the mail service receives new messages, they are automatically displayed in the user's inbox.
-Table 1: Example user objectives and steps
 
 Flow diagram of user objectives and steps
 
@@ -135,7 +135,7 @@ Often, teams fall into the trap of developing a new method to address a reliabil
 
 Gaining a deeper understanding of what's important to the product has many benefits, from knowing where test coverage is important to better incident response. If an SRE knows an issue is severe, they will react and escalate more quickly, resulting in a faster resolution.
 
-##### Deliverable: A set of severity and criticality definitions aligned with the product's user objectives and steps.
+#### Deliverable: A set of severity and criticality definitions aligned with the product's user objectives and steps.
 
 Mail service severity example
 Continuing the mail service product definition example, we define the product's incident severity guidelines as follows:
@@ -172,7 +172,8 @@ Additional value
 
 While Measure performance discusses how you can use this product model as the foundation for measuring a product's performance, this is not the only value provided by the model. A clear understanding of the user goals for your product enables you to align testing strategies, product usage metrics, and other production concerns on a shared foundation of user needs.
 
-3. Measure Performance
+### 3. Measure Performance
+   
 SLOs are a key component of any SRE team, providing tangible metrics that reflect the reliability of a system. The SRE Workbook [4] is a detailed resource that defines SLOs and service level indicators (SLI) and describes how to use them, particularly with respect to services.
 
 Service-based SLOs generally don't provide adequate product coverage. There are classes of issues that cannot be measured from a single server, for example, issues that occur within a web or mobile application, or through an asynchronous action.
@@ -186,13 +187,23 @@ Service SLOs are the most common type of SLO. They are instrumented through meas
 The following are the main characteristics of service SLOs:
 
 Characteristic	Description
-Low cost	Service SLOs are common and widely used.
-High confidence	The data obtained for service SLOs is under your control and can be provided with very high availability guarantees, like an SLO on the SLO data.
-Low latency	You can gather and process data with a very low latency, from seconds to a few minutes.
-Narrow coverage	These SLOs only cover what the service can see, which is improved by measuring the SLOs at a higher layer in the service stack. If the returned result is considered a success to the service, it passes the SLO. However, successful results don't always guarantee that the results are useful, for example, empty responses or new incompatible data being returned to an old client.
-Table 4: Characteristics of service SLOs
 
-Client-side instrumentation
+Low cost	Service SLOs are common and widely used.
+
+High confidence	The data obtained for service SLOs is under your control and can be provided with very high availability guarantees, like an SLO on the SLO data.
+
+Low latency	You can gather and process data with a very low latency, from seconds to a few minutes.
+
+Narrow coverage	These SLOs only cover what the service can see, which is improved by measuring the SLOs at a higher layer in the service stack. If the returned result is considered a success to the service, it passes the SLO. However, successful results don't always guarantee that the results are useful, for example, empty responses or new incompatible data being returned to an old client.
+
+#### Characteristic	& Description of SLOs
+Low cost:	Service SLOs are common and widely used.
+High confidence:	The data obtained for service SLOs is under your control and can be provided with very high availability guarantees, like an SLO on the SLO data.
+Low latency:	You can gather and process data with a very low latency, from seconds to a few minutes.
+Narrow coverage:	These SLOs only cover what the service can see, which is improved by measuring the SLOs at a higher layer in the service stack. If the returned result is considered a success to the service, it passes the SLO. However, successful results don't always guarantee that the results are useful, for example, empty responses or new incompatible data being returned to an old client.
+
+
+#### Client-side instrumentation
 
 With the development of more sophisticated (and more complex) user interfaces through web and mobile applications, more SRE teams have started to support these interfaces directly. This can be achieved by retrieving telemetry directly from user interfaces.
 
@@ -255,13 +266,15 @@ When combined with product criticality, you can validate that SLOs are set appro
 
 Example of how product SLOs are defined around user objectives and steps
 
+![image](https://github.com/user-attachments/assets/23f9f89c-ea9e-49e5-95e9-459e51d52955)
+
 Fig. 3: Example of how product SLOs are defined around user objectives and steps.
 
 Deliverable: A prioritized list of product SLOs that cover different SLO types (availability, latency) and instrumentation methods (service, client-side, end-to-end). Implement the highest priority SLOs and use the lower priority SLOs to create a backlog that you can prioritize later.
 
-Telemetry
+#### Telemetry
 
-Before you can implement the SLOs discussed in Product SLOs, metrics (also known as SLIs) must be available to help you track the relevant product functionality. To develop these metrics, you need to bridge the conceptual world of the product model with the product's real-world infrastructure. This capability is a key value driver of the product reliability model.
+Before you can implement the SLOs discussed in Product SLOs, metrics (also known as SLIs) must be available to help you **track the relevant product functionality**. To develop these metrics, you need to bridge the conceptual world of the product model with the product's real-world infrastructure. This capability is a key value driver of the product reliability model.
 
 Whereas a team's understanding of SLO performance was once limited to "database writes availability is 98%," for example, product-focused SLOs can show that those 2% of errors are causing 100% of "save email draft" steps to fail.
 
@@ -281,7 +294,8 @@ After you annotate an RPC request, your services will need to propagate the anno
 Understanding issues and their impact by having the user objective steps in monitoring dashboards and application logs.
 Quickly determining which user objective is impacted by an issue, and therefore the severity of an incident.
 Identifying SLOs that only consider specific user objective steps and ignore less important requests like batch and test traffic.
-4. Manage reliability
+
+### 4. Manage reliability
 Now that you've identified your stakeholders, user objectives and steps, the criticality definition, and your product SLOs, you are ready to support the product.
 
 We recommend that you start supporting a product or service on a small scale, for example, by onboarding a single objective or step with some SLOs, before iterating to expand your team's responsibility and scope. Supporting a product is an ongoing process that is repeated continually. At every stage of supporting a product, you will work with your stakeholders to determine trade-offs between the following areas of investment:
@@ -371,18 +385,3 @@ Table 8: Options for applying a product support model to infrastructure servers
 The product support model provides a framework for SRE teams to focus their support on what matters most to the users (a traditional SRE goal) and the business as a whole. This model aligns the SRE team with the rest of the organization and supports a common nomenclature and goals.
 
 The model solves a number of problems with the traditional service support model by helping SREs understand what's most important to the product, and by helping SREs use that knowledge to better cover the gaps in the service support model. Ultimately, the product support model lets the SRE team focus on the user to ensure that the product meets the end user's real-world needs.
-
-References
-[1] Ulwick, A.W. and Osterwalder, A. (2016). Jobs to be done : theory to practice. [online] Idea Bite Press. Available at: https://jobs-to-be-done-book.com/
-
-[2] chang, austin (2017). What To Do If Your Product Isn't Growing. [online] Initialized Capital. Available at: https://medium.com/initialized-capital/what-to-do-if-your-product-isnt-growing-7eb9d158fc
-
-[3] Beyer, B., Jones, C., Petoff, J. and Murphy, N. (2016). Site reliability engineering : How Google runs production systems. Sebastopol, Ca: O'reilly Media.
-
-[4] Beyer, B., Murphy, N., Rensin, D.K., Kawahara, K. and Thorne, S. (2018). The site reliability workbook practical ways to implement SRE. Cambridge O'reilly.
-
-[5] Kalbach, J. (2020). The jobs to be done playbook : align your markets, organizations, and strategy around customer needs. New York: Two Waves Books.
-
-[6] Google Cloud. (n.d.). Incidents and the Google Cloud Service Health Dashboard | Support Documentation. [online] Available at: https://cloud.google.com/support/docs/dashboard#major_incident [Accessed 20 Apr. 2023].
-
-[7] Wikipedia Contributors (2019). Responsibility Assignment Matrix. [online] Wikipedia. Available at: https://en.wikipedia.org/wiki/Responsibility_assignment_matrix
